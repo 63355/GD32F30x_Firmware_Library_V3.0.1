@@ -1,0 +1,33 @@
+# Keil uVision project files
+*.uvproj
+*.uvopt
+*.uvprojx
+*.uvoptx
+*.uvguix.*
+*.scvd
+
+# Build output
+listings/
+Objects/
+*.lst
+*.o
+*.obj
+*.sct
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+
+# JLink files
+JLinkLog.txt
+JLinkSettings.ini
+
+# User-specific files
+*.bak
+*.tmp
+*.iex
+*.i
+
+# VS Code specific
+.vscode/
