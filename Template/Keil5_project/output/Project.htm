@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\output\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\output\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Wed Aug 13 14:11:08 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6160001: Last Updated: Thu Aug 14 11:11:14 2025
 <BR><P>
 <H3>Maximum Stack Usage =         80 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-main &rArr; led_matrix_init &rArr; continuous_timer_init &rArr; nvic_irq_enable
+main &rArr; led_matrix_init &rArr; m_timer_init &rArr; nvic_irq_enable
 <P>
 <H3>
 Mutually Recursive functions
@@ -102,7 +102,7 @@ Global Symbols
 <P><STRONG><a name="[48]"></a>__main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry.o(.ARM.Collect$$$$00000000))
 <BR>[Address Reference Count : 1]<UL><LI> startup_gd32f30x_hd.o(.text)
 </UL>
-<P><STRONG><a name="[6a]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
+<P><STRONG><a name="[69]"></a>_main_stk</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry2.o(.ARM.Collect$$$$00000001))
 
 <P><STRONG><a name="[49]"></a>_main_scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry5.o(.ARM.Collect$$$$00000004))
 <BR><BR>[Calls]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
@@ -112,15 +112,15 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
 </UL>
 
-<P><STRONG><a name="[6b]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
+<P><STRONG><a name="[6a]"></a>_main_clock</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry7b.o(.ARM.Collect$$$$00000008))
 
-<P><STRONG><a name="[6c]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
+<P><STRONG><a name="[6b]"></a>_main_cpp_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry8b.o(.ARM.Collect$$$$0000000A))
 
-<P><STRONG><a name="[6d]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
+<P><STRONG><a name="[6c]"></a>_main_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry9a.o(.ARM.Collect$$$$0000000B))
 
-<P><STRONG><a name="[6e]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
+<P><STRONG><a name="[6d]"></a>__rt_final_cpp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry10a.o(.ARM.Collect$$$$0000000D))
 
-<P><STRONG><a name="[6f]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
+<P><STRONG><a name="[6e]"></a>__rt_final_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, entry11a.o(.ARM.Collect$$$$0000000F))
 
 <P><STRONG><a name="[0]"></a>Reset_Handler</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, startup_gd32f30x_hd.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_gd32f30x_hd.o(RESET)
@@ -312,7 +312,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[49]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_main_scatterload
 </UL>
 
-<P><STRONG><a name="[70]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
+<P><STRONG><a name="[6f]"></a>__scatterload_rt2</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, init.o(.text), UNUSED)
 
 <P><STRONG><a name="[4]"></a>BusFault_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, gd32f30x_it.o(.text.BusFault_Handler))
 <BR><BR>[Calls]<UL><LI><a href="#[4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BusFault_Handler
@@ -374,22 +374,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_gd32f30x_hd.o(RESET)
 </UL>
-<P><STRONG><a name="[53]"></a>continuous_timer_init</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, rab_matrix.o(.text.continuous_timer_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = continuous_timer_init &rArr; nvic_irq_enable
-</UL>
-<BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_clock_enable
-<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nvic_irq_enable
-<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_interrupt_flag_clear
-<LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_interrupt_enable
-<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_init
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_enable
-<LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_deinit
-</UL>
-<BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
-</UL>
-
-<P><STRONG><a name="[62]"></a>delay_ms</STRONG> (Thumb, 58 bytes, Stack size 12 bytes, rab_matrix.o(.text.delay_ms))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = delay_ms
+<P><STRONG><a name="[62]"></a>fu</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, main.o(.text.fu))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = fu
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -404,63 +390,63 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[5d]"></a>gpio_init</STRONG> (Thumb, 182 bytes, Stack size 32 bytes, gd32f30x_gpio.o(.text.gpio_init))
+<P><STRONG><a name="[58]"></a>gpio_init</STRONG> (Thumb, 182 bytes, Stack size 32 bytes, gd32f30x_gpio.o(.text.gpio_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = gpio_init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
+<BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
 </UL>
 
-<P><STRONG><a name="[5e]"></a>gpio_pin_remap_config</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, gd32f30x_gpio.o(.text.gpio_pin_remap_config))
+<P><STRONG><a name="[59]"></a>gpio_pin_remap_config</STRONG> (Thumb, 122 bytes, Stack size 16 bytes, gd32f30x_gpio.o(.text.gpio_pin_remap_config))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = gpio_pin_remap_config
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
+<BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
 </UL>
 
-<P><STRONG><a name="[5c]"></a>led_matrix_init</STRONG> (Thumb, 388 bytes, Stack size 32 bytes, rab_matrix.o(.text.led_matrix_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = led_matrix_init &rArr; continuous_timer_init &rArr; nvic_irq_enable
+<P><STRONG><a name="[55]"></a>led_matrix_init</STRONG> (Thumb, 384 bytes, Stack size 32 bytes, rab_matrix.o(.text.led_matrix_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = led_matrix_init &rArr; m_timer_init &rArr; nvic_irq_enable
 </UL>
-<BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_clock_enable
-<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_pin_remap_config
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_init
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_clock_enable
+<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_pin_remap_config
+<LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gpio_init
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 164 bytes, Stack size 0 bytes, main.o(.text.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = main &rArr; led_matrix_init &rArr; continuous_timer_init &rArr; nvic_irq_enable
+<P><STRONG><a name="[46]"></a>main</STRONG> (Thumb, 258 bytes, Stack size 8 bytes, main.o(.text.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = main &rArr; led_matrix_init &rArr; m_timer_init &rArr; nvic_irq_enable
 </UL>
 <BR>[Calls]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;systick_config
-<LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
+<LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gd32f30x_firmware_version_get
 <LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;full
-<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
+<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fu
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL>
-<P><STRONG><a name="[58]"></a>nvic_irq_enable</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, gd32f30x_misc.o(.text.nvic_irq_enable))
+<P><STRONG><a name="[5d]"></a>nvic_irq_enable</STRONG> (Thumb, 158 bytes, Stack size 16 bytes, gd32f30x_misc.o(.text.nvic_irq_enable))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = nvic_irq_enable
 </UL>
 <BR>[Calls]<UL><LI><a href="#[63]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nvic_priority_group_set
 </UL>
-<BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
 <P><STRONG><a name="[63]"></a>nvic_priority_group_set</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, gd32f30x_misc.o(.text.nvic_priority_group_set))
-<BR><BR>[Called By]<UL><LI><a href="#[58]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nvic_irq_enable
+<BR><BR>[Called By]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nvic_irq_enable
 </UL>
 
-<P><STRONG><a name="[54]"></a>rcu_periph_clock_enable</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, gd32f30x_rcu.o(.text.rcu_periph_clock_enable))
-<BR><BR>[Called By]<UL><LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<P><STRONG><a name="[57]"></a>rcu_periph_clock_enable</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, gd32f30x_rcu.o(.text.rcu_periph_clock_enable))
+<BR><BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
-<P><STRONG><a name="[69]"></a>rcu_periph_reset_disable</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, gd32f30x_rcu.o(.text.rcu_periph_reset_disable))
-<BR><BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_deinit
+<P><STRONG><a name="[68]"></a>rcu_periph_reset_disable</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, gd32f30x_rcu.o(.text.rcu_periph_reset_disable))
+<BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_deinit
 </UL>
 
-<P><STRONG><a name="[68]"></a>rcu_periph_reset_enable</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, gd32f30x_rcu.o(.text.rcu_periph_reset_enable))
-<BR><BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_deinit
+<P><STRONG><a name="[67]"></a>rcu_periph_reset_enable</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, gd32f30x_rcu.o(.text.rcu_periph_reset_enable))
+<BR><BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_deinit
 </UL>
 
 <P><STRONG><a name="[60]"></a>systick_config</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, systick.o(.text.systick_config))
@@ -472,64 +458,59 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[46]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[51]"></a>tim2_callback</STRONG> (Thumb, 214 bytes, Stack size 32 bytes, rab_matrix.o(.text.tim2_callback))
+<P><STRONG><a name="[51]"></a>tim2_callback</STRONG> (Thumb, 222 bytes, Stack size 32 bytes, rab_matrix.o(.text.tim2_callback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = tim2_callback &rArr; input_line &rArr; write_data
 </UL>
-<BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;row_select
-<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;input_line
-<LI><a href="#[59]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_enable
-<LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_disable
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_counter_value_config
+<BR>[Calls]<UL><LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;row_select
+<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;input_line
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_enable
+<LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_disable
 </UL>
 <BR>[Called By]<UL><LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2_IRQHandler
 </UL>
 
-<P><STRONG><a name="[67]"></a>timer_counter_value_config</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_counter_value_config))
-<BR><BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tim2_callback
-</UL>
-
-<P><STRONG><a name="[55]"></a>timer_deinit</STRONG> (Thumb, 190 bytes, Stack size 8 bytes, gd32f30x_timer.o(.text.timer_deinit))
+<P><STRONG><a name="[5a]"></a>timer_deinit</STRONG> (Thumb, 190 bytes, Stack size 8 bytes, gd32f30x_timer.o(.text.timer_deinit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = timer_deinit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_reset_enable
-<LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_reset_disable
+<BR>[Calls]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_reset_enable
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_reset_disable
 </UL>
-<BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
-<P><STRONG><a name="[65]"></a>timer_disable</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_disable))
+<P><STRONG><a name="[66]"></a>timer_disable</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_disable))
 <BR><BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tim2_callback
 </UL>
 
-<P><STRONG><a name="[59]"></a>timer_enable</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_enable))
+<P><STRONG><a name="[5e]"></a>timer_enable</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_enable))
 <BR><BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tim2_callback
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
-<P><STRONG><a name="[56]"></a>timer_init</STRONG> (Thumb, 180 bytes, Stack size 8 bytes, gd32f30x_timer.o(.text.timer_init))
+<P><STRONG><a name="[5b]"></a>timer_init</STRONG> (Thumb, 180 bytes, Stack size 8 bytes, gd32f30x_timer.o(.text.timer_init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = timer_init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
-<P><STRONG><a name="[57]"></a>timer_interrupt_enable</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_interrupt_enable))
-<BR><BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
+<P><STRONG><a name="[5c]"></a>timer_interrupt_enable</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_interrupt_enable))
+<BR><BR>[Called By]<UL><LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
 <P><STRONG><a name="[52]"></a>timer_interrupt_flag_clear</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_interrupt_flag_clear))
-<BR><BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;continuous_timer_init
-<LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2_IRQHandler
+<LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;m_timer_init
 </UL>
 
 <P><STRONG><a name="[50]"></a>timer_interrupt_flag_get</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, gd32f30x_timer.o(.text.timer_interrupt_flag_get))
 <BR><BR>[Called By]<UL><LI><a href="#[27]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIMER2_IRQHandler
 </UL>
 
-<P><STRONG><a name="[71]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
+<P><STRONG><a name="[70]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
 
-<P><STRONG><a name="[72]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
+<P><STRONG><a name="[71]"></a>__scatterload_null</STRONG> (Thumb, 2 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_null), UNUSED)
 
-<P><STRONG><a name="[73]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
+<P><STRONG><a name="[72]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 <P>
 <H3>
 Local Symbols
@@ -567,22 +548,36 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[47]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
 </UL>
 
-<P><STRONG><a name="[5a]"></a>input_line</STRONG> (Thumb, 434 bytes, Stack size 24 bytes, rab_matrix.o(.text.input_line))
+<P><STRONG><a name="[53]"></a>input_line</STRONG> (Thumb, 434 bytes, Stack size 24 bytes, rab_matrix.o(.text.input_line))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = input_line &rArr; write_data
 </UL>
-<BR>[Calls]<UL><LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_data
+<BR>[Calls]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;write_data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tim2_callback
 </UL>
 
-<P><STRONG><a name="[66]"></a>row_select</STRONG> (Thumb, 86 bytes, Stack size 0 bytes, rab_matrix.o(.text.row_select))
+<P><STRONG><a name="[56]"></a>m_timer_init</STRONG> (Thumb, 88 bytes, Stack size 24 bytes, rab_matrix.o(.text.m_timer_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = m_timer_init &rArr; nvic_irq_enable
+</UL>
+<BR>[Calls]<UL><LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;rcu_periph_clock_enable
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;nvic_irq_enable
+<LI><a href="#[52]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_interrupt_flag_clear
+<LI><a href="#[5c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_interrupt_enable
+<LI><a href="#[5b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_init
+<LI><a href="#[5e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_enable
+<LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;timer_deinit
+</UL>
+<BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;led_matrix_init
+</UL>
+
+<P><STRONG><a name="[65]"></a>row_select</STRONG> (Thumb, 86 bytes, Stack size 0 bytes, rab_matrix.o(.text.row_select))
 <BR><BR>[Called By]<UL><LI><a href="#[51]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tim2_callback
 </UL>
 
-<P><STRONG><a name="[5b]"></a>write_data</STRONG> (Thumb, 96 bytes, Stack size 8 bytes, rab_matrix.o(.text.write_data))
+<P><STRONG><a name="[54]"></a>write_data</STRONG> (Thumb, 96 bytes, Stack size 8 bytes, rab_matrix.o(.text.write_data))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = write_data
 </UL>
-<BR>[Called By]<UL><LI><a href="#[5a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;input_line
+<BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;input_line
 </UL>
 <P>
 <H3>

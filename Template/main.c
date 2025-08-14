@@ -40,6 +40,12 @@ OF SUCH DAMAGE.
 #include "gd32f307c_eval.h"
 #include "rgb_matrix.h"
 
+void fu(uint8_t i, uint8_t j, uint8_t r, uint8_t g, uint8_t b)
+{
+	screen_buffer[i][j].r = r;
+	screen_buffer[i][j].g = g;
+	screen_buffer[i][j].b = b;
+}
 
 
 int main(void)
@@ -56,9 +62,37 @@ int main(void)
 
 	systick_config();   
 
-	full(10, 10, 10);
-
-
+	full(0, 0, 0);
+	
+	for(uint8_t i=0;i<8;i++)
+	{
+		for(uint8_t k=0;k<32;k++)
+		{
+			fu(i,k,k + i*32,0,0	);
+		}
+	}
+	for(uint8_t i=0;i<8;i++)
+	{
+		for(uint8_t k=0;k<32;k++)
+		{
+			fu(i+8,k,0, k + i*32,0);
+		}
+	}
+	for(uint8_t i=0;i<8;i++)
+	{
+		for(uint8_t k=0;k<32;k++)
+		{
+			fu(i+16,k,0,0, k + i*32);
+		}
+	}
+	for(uint8_t i=0;i<8;i++)
+	{
+		for(uint8_t k=0;k<32;k++)
+		{
+			fu(i+24,k,k + i*32, k + i*32, k + i*32);
+		}
+	}
+	
 	led_matrix_init();	
 	
 
@@ -73,46 +107,49 @@ int main(void)
 
     while (1)
 	{
-	
+//		static uint8_t i=0;
+//		i++;
+//		
+//		full(i, i, i);
+//		delay_ms(10);
+//	
         // ==========================================================
         //         在单缓冲区上实现流水灯
         // ==========================================================
 
-        // 1. 熄灭上一个位置的像素
-        //    直接将前一个像素的颜色设置为黑色
-        screen_buffer[prev_r][prev_c].r = 10;
-        screen_buffer[prev_r][prev_c].g = 10;
-        screen_buffer[prev_r][prev_c].b = 10;
+//        // 1. 熄灭上一个位置的像素
+//        //    直接将前一个像素的颜色设置为黑色
+//        screen_buffer[prev_r][prev_c].r = 0;
+//        screen_buffer[prev_r][prev_c].g = 0;
+//        screen_buffer[prev_r][prev_c].b = 0;
 
-        // 2. 点亮当前位置的像素
-        //    这里使用你指定的亮度 31
-        screen_buffer[r][c].r = 0;
-        screen_buffer[r][c].g = 0;
-        screen_buffer[r][c].b = 0;
-        
-        // 3. 更新“上一个位置”的记录，为下一次循环做准备
-        //    将当前位置保存为下一次的“前一个位置”
-        prev_r = r;
-        prev_c = c;
-		
-        
-        // 4. 计算下一个像素的位置
-        c++; // X 坐标向右移动
-        
-        // 检查是否到达行尾
-        if (c >= COL_NUM) {
-            c = 0;       // 回到行首
-            r++;     // 移动到下一行
-            
-            // 检查是否到达屏幕底部
-            if (r >= ROW_NUM) {
-                r = 0; // 回到屏幕顶部，重新开始
-            }
-        }
+//        // 2. 点亮当前位置的像素
+//        //    这里使用你指定的亮度 31
+//        screen_buffer[r][c].r = 64;
+//        screen_buffer[r][c].g = 64;
+//        screen_buffer[r][c].b = 64;
+//        
+//        // 3. 更新“上一个位置”的记录，为下一次循环做准备
+//        //    将当前位置保存为下一次的“前一个位置”
+//        prev_r = r;
+//        prev_c = c;
+//		
+//        // 4. 计算下一个像素的位置
+//        c++; // X 坐标向右移动
+//        
+//        // 检查是否到达行尾
+//        if (c >= COL_NUM) {
+//            c = 0;       // 回到行首
+//            r++;     // 移动到下一行
+//            
+//            // 检查是否到达屏幕底部
+//            if (r >= ROW_NUM) {
+//                r = 0; // 回到屏幕顶部，重新开始
+//            }
+//        }
 
-        // 5. 延时，控制流水灯的移动速度
-        delay_ms(30);
-
+//        // 5. 延时，控制流水灯的移动速度
+//        delay_ms(50);
     }
 }
 

@@ -1,6 +1,6 @@
 #include "rgb_matrix.h"
 
-volatile RGB_Pixel screen_buffer[ROW_NUM][COL_NUM]; 
+__attribute__((aligned(4))) volatile RGB_t screen_buffer[ROW_NUM][COL_NUM]; 
 
 /*----------------------下面是移植需要实现部分----------------------*/
 
@@ -42,7 +42,7 @@ volatile RGB_Pixel screen_buffer[ROW_NUM][COL_NUM];
  * @param period_us 期望周期 (单位：微秒)，支持 0.1µs 分辨率
  *        例如：1.5 表示 1.5µs
  */
-void continuous_timer_init(float period_us)
+static void m_timer_init(float period_us)
 {
     #define TIMER_INPUT_CLOCK_FREQ_HZ  120000000U // 假设定时器时钟为120MHz
 
@@ -70,6 +70,15 @@ void continuous_timer_init(float period_us)
     nvic_irq_enable(TIMER2_IRQn, 2, 0);
 
     timer_enable(TIMER2);
+} 
+/**
+ * @brief uart0串口初始化函数
+ * 波特率：1 500 000
+ * 纯接收。接收开DMA和空闲中断。主机发完一个包（四分之一帧）进空闲中断后进DMA缓冲区把数据按照某个状态变量依次搬运到指定写缓冲区，独立存放
+ */
+static void m_uart_init(void)
+{
+
 }
 
 /**
@@ -77,7 +86,7 @@ void continuous_timer_init(float period_us)
  */
 void led_matrix_init(void)
 {
-	continuous_timer_init(TIME_BASE);
+	m_timer_init(TIME_BASE);
 	//行片选部分的gpio初始化
 	
 	rcu_periph_clock_enable(MCU_A_GPIO_CLK);//开启时钟
@@ -154,7 +163,7 @@ static inline void row_select(uint8_t row)
 /**
  * @brief 根据RGB888的某一位串行写入灯的数据
  */
-static inline void write_data(RGB_Pixel *data, uint8_t mask)
+static inline void write_data(RGB_t *data, uint8_t mask)
 {	
 	//__NOP();
 	SM16306_CLK_SET;	
@@ -251,16 +260,74 @@ void full(uint8_t r, uint8_t g, uint8_t b)
 	}
 }
 
+///**
+// * @brief 周期执行的灯珠刷新函数
+// */
+//void tim2_callback(void) 
+//{
+//	volatile static uint8_t current_group = 0;//当前组
+//	volatile static uint8_t current_row = 0;//当前组的行
+//	volatile static uint8_t current_plane = 0;//当前位平面等级
+//	volatile static uint16_t cnt = 0;//运行计数器
+//	
+//	static const uint16_t map[9][5] = {
+//		{1,2,3,4},        //1
+//		{5,7,9,11},       //2
+//		{13,17,21,25},    //4
+//		{29,37,45,53},    //8
+//		{61,77,93,109},   //16
+//		{125,157,189,221},//32
+//		{253,317,381,445},//64
+//		{509,637,765,893},//128
+//		{1021,0,0,0}
+//	};
+//	
+//	cnt++;
+//	
+//	if(cnt == map[current_plane][current_group])
+//	{
+//		SM16306_OFF;row_select(current_group * 8 + current_row);//选择行
+//		if(current_group == 0)
+//		{
+//			if(current_plane == RGB_LEVEL)
+//			{
+//				current_plane = 0;
+//				current_row = (current_row + 1) % 8;
+//				cnt = 0;	
+//			}
+//			else
+//			{
+//				timer_disable(TIMER2);//关定时器
+//				SM16306_UNLOCK;//解锁，让数据流入锁存器
+//				input_line(current_row, 8 - RGB_LEVEL + current_plane);//刷入该行的数据
+//				SM16306_LOCK;//上锁，稳定数据
+//				timer_enable(TIMER2);//开定时器			
+//			}
+//		}
+//		current_group++;
+//		if(current_group == 4)
+//		{
+//			current_group = 0;
+//			if()
+//			{}
+//			current_plane++;
+//		}	
+//		SM16306_ON;
+//		//timer_counter_value_config(TIMER2, 0);//清除tim2的cnt
+//	}
+//} 
+
 /**
- * @brief 周期执行的灯珠刷新函数
+ * @brief (修正版) 周期执行的灯珠刷新函数
+ * @note  修正了状态切换逻辑，确保每次循环都能完整执行。
  */
-void tim2_callback(void) 
+void tim2_callback(void)
 {
 	volatile static uint8_t current_group = 0;//当前组
 	volatile static uint8_t current_row = 0;//当前组的行
 	volatile static uint8_t current_plane = 0;//当前位平面等级
 	volatile static uint16_t cnt = 0;//运行计数器
-	
+
 	static const uint16_t map[9][5] = {
 		{1,2,3,4},        //1
 		{5,7,9,11},       //2
@@ -272,40 +339,45 @@ void tim2_callback(void)
 		{509,637,765,893},//128
 		{1021,0,0,0}
 	};
-	
+		
 	cnt++;
 
-	if(cnt == map[current_plane][current_group])
+	if (current_plane == RGB_LEVEL) 
 	{
-		SM16306_OFF;
-		if(current_group == 0)
+		if (cnt == map[RGB_LEVEL][0]) //哨兵
+		{ 
+			current_plane = 0;
+			current_row = (current_row + 1) % 8;
+			cnt = 0;
+		}
+	} 
+	else 
+	{
+		if (cnt == map[current_plane][current_group])
 		{
-			timer_disable(TIMER2);//关定时器
-			SM16306_UNLOCK;//解锁，让数据流入锁存器
-			input_line(current_row, current_plane);//刷入该行的数据
-			SM16306_LOCK;//上锁，稳定数据
-			timer_enable(TIMER2);//开定时器
-			
-			if(current_plane == RGB_LEVEL+1)
+			SM16306_OFF;
+			row_select(current_group * 8 + current_row);//选中某一行
+			if (current_group == 0) //仅在 group=0 时加载数据
 			{
-				current_plane=0;
-				current_row = (current_row + 1) % 8;
-				cnt = 0;
+				timer_disable(TIMER2); //关定时器
+				SM16306_UNLOCK; //解锁，让数据流入锁存器
+				input_line(current_row, 8 - RGB_LEVEL + current_plane); //刷入该行的数据
+				SM16306_LOCK;//上锁，稳定数据
+				timer_enable(TIMER2); //开定时器				
+			}
+			SM16306_ON;
+			
+			// 状态更新
+			current_group++;
+			if (current_group >= 4)
+			{
+				current_group = 0;
+				current_plane++;
 			}
 		}
-		row_select(current_group * 8 + current_row);//选择行
-	
-		current_group++;
-		if(current_group == 4)
-		{
-			current_group = 0;
-			current_plane++;
-		}	
-
-		SM16306_ON;
-		timer_counter_value_config(TIMER2, 0);//清除tim2的cnt
 	}
-} 
+}
+
 
 /**
  * @brief 定时器中断回调函数
@@ -330,7 +402,7 @@ void delay_ms(volatile uint32_t nms)
     for (i = 0; i < nms; i++) {
         // 这个内层循环的计数值需要根据你的MCU主频进行粗略调整
         // 假设在某个主频下，这个循环大约消耗 1ms
-        for (j = 0; j < 2000; j++) { 
+        for (j = 0; j < 3500; j++) { 
             __NOP(); // 执行一条空指令，消耗一个时钟周期
         }
     }
