@@ -38,8 +38,8 @@ __attribute__((aligned(4))) volatile RGB_t screen_buffer[ROW_NUM][COL_NUM];
 #define SM16306_OE_RESET     (GPIO_BC(SM16306_OE_GPIO_PORT) = (SM16306_OE_PIN))
 
 /**
- * @brief 开一个定时器中断,开出来的回调函数放在本文件的下面部分位置，里面执行“tim2_callback();”
- * @param period_us 期望周期 (单位：微秒)，支持 0.1µs 分辨率
+* @brief 开一个(!!arr分辨率为0.1us!!)定时器中断,开出来的回调函数放在本文件的下面部分位置，里面执行“tim2_callback();”
+ * @param period_us 期望周期 (单位：微秒)，0.1µs 分辨率
  *        例如：1.5 表示 1.5µs
  */
 static void m_timer_init(float period_us)
@@ -160,18 +160,28 @@ static inline void row_select(uint8_t row)
     if (row & 0x10) MCU_E_SET; else MCU_E_RESET;
 }
 
-/**
- * @brief 根据RGB888的某一位串行写入灯的数据
- */
-static inline void write_data(RGB_t *data, uint8_t mask)
-{	
-	//__NOP();
-	SM16306_CLK_SET;	
-	if(data->r & mask) SM16306_SDI_R_SET; else SM16306_SDI_R_RESET;
-	if(data->g & mask) SM16306_SDI_G_SET; else SM16306_SDI_G_RESET;
-	if(data->b & mask) SM16306_SDI_B_SET; else SM16306_SDI_B_RESET;	
-	SM16306_CLK_RESET;//时钟驱动
-}
+///**
+// * @brief 根据RGB888的某一位串行写入灯的数据
+// */
+//static inline void write_data(RGB_t *data, uint8_t mask)
+//{	
+//	//__NOP();
+//	SM16306_CLK_SET;	
+//	if(data->r & mask) SM16306_SDI_R_SET; else SM16306_SDI_R_RESET;
+//	if(data->g & mask) SM16306_SDI_G_SET; else SM16306_SDI_G_RESET;
+//	if(data->b & mask) SM16306_SDI_B_SET; else SM16306_SDI_B_RESET;	
+//	SM16306_CLK_RESET;//时钟驱动
+//}
+
+#define write_data(data_ptr, data_mask) \
+    do { \
+		__NOP();__NOP();\
+        SM16306_CLK_SET; \
+        if((data_ptr)->r & (data_mask)) SM16306_SDI_R_SET; else SM16306_SDI_R_RESET; \
+        if((data_ptr)->g & (data_mask)) SM16306_SDI_G_SET; else SM16306_SDI_G_RESET; \
+        if((data_ptr)->b & (data_mask)) SM16306_SDI_B_SET; else SM16306_SDI_B_RESET; \
+        SM16306_CLK_RESET; \
+    } while(0)
 
 /**
  * @param line 希望刷入的一组中的某一行，范围0~7
@@ -260,17 +270,18 @@ void full(uint8_t r, uint8_t g, uint8_t b)
 	}
 }
 
+
 ///**
-// * @brief 周期执行的灯珠刷新函数
-// */
-//void tim2_callback(void) 
+//* @brief 周期执行的灯珠刷新函数
+//*/
+//void tim2_callback(void)
 //{
 //	volatile static uint8_t current_group = 0;//当前组
 //	volatile static uint8_t current_row = 0;//当前组的行
 //	volatile static uint8_t current_plane = 0;//当前位平面等级
 //	volatile static uint16_t cnt = 0;//运行计数器
-//	
-//	static const uint16_t map[9][5] = {
+
+//	static const uint16_t map[9][4] = {
 //		{1,2,3,4},        //1
 //		{5,7,9,11},       //2
 //		{13,17,21,25},    //4
@@ -281,101 +292,92 @@ void full(uint8_t r, uint8_t g, uint8_t b)
 //		{509,637,765,893},//128
 //		{1021,0,0,0}
 //	};
-//	
+//		
 //	cnt++;
-//	
-//	if(cnt == map[current_plane][current_group])
+
+//	if (current_plane == RGB_LEVEL) 
 //	{
-//		SM16306_OFF;row_select(current_group * 8 + current_row);//选择行
-//		if(current_group == 0)
+//		if (cnt == map[RGB_LEVEL][0]) //哨兵
+//		{ 
+//			current_plane = 0;
+//			current_row = (current_row + 1) % 8;
+//			cnt = 0;
+//		}
+//	} 
+//	else 
+//	{
+//		if (cnt == map[current_plane][current_group])
 //		{
-//			if(current_plane == RGB_LEVEL)
+//			SM16306_OFF;
+//			row_select(current_group * 8 + current_row);//选中某一行
+//			if (current_group == 0) //仅在 group=0 时加载数据
 //			{
-//				current_plane = 0;
-//				current_row = (current_row + 1) % 8;
-//				cnt = 0;	
-//			}
-//			else
-//			{
-//				timer_disable(TIMER2);//关定时器
-//				SM16306_UNLOCK;//解锁，让数据流入锁存器
-//				input_line(current_row, 8 - RGB_LEVEL + current_plane);//刷入该行的数据
+//				timer_disable(TIMER2); //关定时器
+//				SM16306_UNLOCK; //解锁，让数据流入锁存器
+//				input_line(current_row, 8 - RGB_LEVEL + current_plane); //刷入该行的数据
 //				SM16306_LOCK;//上锁，稳定数据
-//				timer_enable(TIMER2);//开定时器			
+//				timer_enable(TIMER2); //开定时器				
+//			}
+//			SM16306_ON;
+//			
+//			// 状态更新
+//			current_group++;
+//			if (current_group >= 4)
+//			{
+//				current_group = 0;
+//				current_plane++;
 //			}
 //		}
-//		current_group++;
-//		if(current_group == 4)
-//		{
-//			current_group = 0;
-//			if()
-//			{}
-//			current_plane++;
-//		}	
-//		SM16306_ON;
-//		//timer_counter_value_config(TIMER2, 0);//清除tim2的cnt
+//		//timer_counter_value_config(TIMER2, 0);//清除tim2的cnt，让每一个平面的计时更加准确
 //	}
-//} 
+//}
 
-/**
- * @brief (修正版) 周期执行的灯珠刷新函数
- * @note  修正了状态切换逻辑，确保每次循环都能完整执行。
- */
+
 void tim2_callback(void)
 {
-	volatile static uint8_t current_group = 0;//当前组
-	volatile static uint8_t current_row = 0;//当前组的行
-	volatile static uint8_t current_plane = 0;//当前位平面等级
-	volatile static uint16_t cnt = 0;//运行计数器
+	volatile static uint8_t current_group = 0;
+	volatile static uint8_t current_row = 0;
+	volatile static uint8_t current_plane = 0;
 
-	static const uint16_t map[9][5] = {
-		{1,2,3,4},        //1
-		{5,7,9,11},       //2
-		{13,17,21,25},    //4
-		{29,37,45,53},    //8
-		{61,77,93,109},   //16
-		{125,157,189,221},//32
-		{253,317,381,445},//64
-		{509,637,765,893},//128
-		{1021,0,0,0}
+	static const uint16_t map[8][4] = 
+	{
+		{1*TIME_BASE,  1*TIME_BASE,  1*TIME_BASE,  1*TIME_BASE},        
+		{2*TIME_BASE,  2*TIME_BASE,  2*TIME_BASE,  2*TIME_BASE},       
+		{4*TIME_BASE,  4*TIME_BASE,  4*TIME_BASE,  4*TIME_BASE},      
+		{8*TIME_BASE,  8*TIME_BASE,  8*TIME_BASE,  8*TIME_BASE},       
+		{16*TIME_BASE, 16*TIME_BASE, 16*TIME_BASE, 16*TIME_BASE},  
+		{32*TIME_BASE, 32*TIME_BASE, 32*TIME_BASE, 32*TIME_BASE},   
+		{64*TIME_BASE, 64*TIME_BASE, 64*TIME_BASE, 64*TIME_BASE},   
+		{128*TIME_BASE,128*TIME_BASE,128*TIME_BASE,128*TIME_BASE},
 	};
-		
-	cnt++;
-
-	if (current_plane == RGB_LEVEL) 
+	
+    SM16306_OFF;
+    if (current_group == 0) 
 	{
-		if (cnt == map[RGB_LEVEL][0]) //哨兵
-		{ 
-			current_plane = 0;
-			current_row = (current_row + 1) % 8;
-			cnt = 0;
-		}
-	} 
-	else 
+		timer_disable(TIMER2); //关定时器
+		SM16306_UNLOCK; //解锁，让数据流入锁存器
+		input_line(current_row, 8 - RGB_LEVEL + current_plane); //刷入该行的数据
+		SM16306_LOCK;//上锁，稳定数据
+		timer_enable(TIMER2); //开定时器					
+    }
+    row_select(current_group * 8 + current_row);
+    SM16306_ON;
+    
+	timer_autoreload_value_config(TIMER2, map[current_plane][current_group] - 1);//动态修改arr
+	
+	
+    current_group++;//状态更新
+    if (current_group >= 4) 
 	{
-		if (cnt == map[current_plane][current_group])
+        current_group = 0;
+        current_plane++;
+        if (current_plane >= RGB_LEVEL) 
 		{
-			SM16306_OFF;
-			row_select(current_group * 8 + current_row);//选中某一行
-			if (current_group == 0) //仅在 group=0 时加载数据
-			{
-				timer_disable(TIMER2); //关定时器
-				SM16306_UNLOCK; //解锁，让数据流入锁存器
-				input_line(current_row, 8 - RGB_LEVEL + current_plane); //刷入该行的数据
-				SM16306_LOCK;//上锁，稳定数据
-				timer_enable(TIMER2); //开定时器				
-			}
-			SM16306_ON;
-			
-			// 状态更新
-			current_group++;
-			if (current_group >= 4)
-			{
-				current_group = 0;
-				current_plane++;
-			}
-		}
-	}
+            current_plane = 0;
+            current_row = (current_row + 1) % 8;
+        }
+    }
+    timer_counter_value_config(TIMER2, 0);
 }
 
 

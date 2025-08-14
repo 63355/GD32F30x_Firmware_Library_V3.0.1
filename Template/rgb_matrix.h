@@ -7,8 +7,8 @@
 #define ROW_NUM 32 
 #define COL_NUM 42
 
-#define RGB_LEVEL 5 //RGB等级，6为RGB555
-#define TIME_BASE 5 //驱动定时器中断的周期（单位us，分辨率0.1us），推荐值1~10，越小cpu负载越大
+#define RGB_LEVEL 7 //RGB等级，5为RGB555
+#define TIME_BASE 4 //最小位平面持续时间，单位0.1us
 
 typedef struct {
     uint8_t r;
